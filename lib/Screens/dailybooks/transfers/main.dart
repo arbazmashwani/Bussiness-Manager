@@ -1,11 +1,9 @@
-import 'package:bm/Screens/dailybooks/journalVouchers/model.dart';
-import 'package:bm/Screens/dailybooks/journalVouchers/print.dart';
-import 'package:bm/Screens/dailybooks/journalVouchers/service.dart';
+import 'package:bm/Screens/dailybooks/transfers/model.dart';
+import 'package:bm/Screens/dailybooks/transfers/service.dart';
 import 'package:bm/Screens/special_books/account_manager/account_manager_main.dart';
 import 'package:bm/main.dart';
 
 import 'package:bm/widgets.dart';
-import 'package:dropdown_textfield/dropdown_textfield.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,24 +11,24 @@ import 'package:intl/intl.dart';
 import '../../special_books/account_manager/account_manager_model.dart';
 import '../../special_books/account_manager/account_manager_service.dart';
 
-class JournalVouchers extends StatefulWidget {
-  const JournalVouchers({super.key});
+class TransferMainpage extends StatefulWidget {
+  const TransferMainpage({super.key});
 
   @override
-  State<JournalVouchers> createState() => _JournalVouchersState();
+  State<TransferMainpage> createState() => _TransferMainpageState();
 }
 
-class _JournalVouchersState extends State<JournalVouchers> {
+class _TransferMainpageState extends State<TransferMainpage> {
   List<account_manager_model> remaingbalancelist = [];
-  List<jouranl_voucher_h_model> journallist_h = [];
-  List<jouranl_voucher_d_model> journallist_d = [];
-  List<jouranl_voucher_d_model> Filterjournallist_d = [];
+  List<Transfers_H_model> journallist_h = [];
+  List<Transfers_D_model> journallist_d = [];
+  List<Transfers_D_model> Filterjournallist_d = [];
 
   int number = 0;
   num entrynumber = 00000;
 
-  List<jouranl_voucher_h_model> filteraccountlistbydate = [];
-  final Servicejournal _service = Servicejournal();
+  List<Transfers_H_model> filteraccountlistbydate = [];
+  final Transferservice _service = Transferservice();
   String errormessage = "";
   TextEditingController credittercontroller = TextEditingController();
   TextEditingController debittercontroller = TextEditingController();
@@ -48,8 +46,8 @@ class _JournalVouchersState extends State<JournalVouchers> {
 
     Filterjournallist_d = journallist_d
         .where((element) =>
-            element.voucherNo.toString().trim().toLowerCase() ==
-            journallist_h[number].voucherNo.toString().trim().toLowerCase())
+            element.transNo.toString().trim().toLowerCase() ==
+            journallist_h[number].transNo.toString().trim().toLowerCase())
         .toList();
 
     entrynumber = (num.parse(journallist_h.last.entryNo!)) + 1;
@@ -70,11 +68,11 @@ class _JournalVouchersState extends State<JournalVouchers> {
 
     Filterjournallist_d = journallist_d
         .where((element) =>
-            element.voucherNo.toString().trim().toLowerCase() ==
+            element.transNo.toString().trim().toLowerCase() ==
             journallist_h[number == journallist_h.length - 1
                     ? journallist_h.length - 1
                     : number]
-                .voucherNo
+                .transNo
                 .toString()
                 .trim()
                 .toLowerCase())
@@ -374,19 +372,16 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                               itemCount: filteraccountlistbydate
                                                   .length,
                                               itemBuilder: ((context, index) {
-                                                jouranl_voucher_h_model user =
+                                                Transfers_H_model user =
                                                     filteraccountlistbydate[
                                                         index];
                                                 return Card(
                                                   elevation: 10,
                                                   child: ListTile(
-                                                    subtitle: Text(user
-                                                        .particulars
+                                                    subtitle: Text(
+                                                        user.wHFrom.toString()),
+                                                    title: Text(user.transNo
                                                         .toString()),
-                                                    title: Text(user.voucherNo
-                                                        .toString()),
-                                                    trailing: Text(
-                                                        user.amount.toString()),
                                                   ),
                                                 );
                                               })),
@@ -489,7 +484,7 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                                       .white,
                                                                 ),
                                                                 Text(
-                                                                  "Voucher",
+                                                                  "Slip",
                                                                   style: TextStyle(
                                                                       color: Colors
                                                                           .white,
@@ -506,22 +501,7 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                         ),
                                                         SizedBox(
                                                           child: MaterialButton(
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .push(
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            printjournalvouchers(
-                                                                              invoice: Filterjournallist_d,
-                                                                              textname: "Journal Voucher",
-                                                                              remarks: journallist_h[number].particulars.toString(),
-                                                                              voucherno: journallist_h[number].voucherNo.toString(),
-                                                                              dated: journallist_h[number].dated.toString(),
-                                                                            )),
-                                                              );
-                                                            },
+                                                            onPressed: () {},
                                                             color:
                                                                 Color.fromARGB(
                                                                     255,
@@ -560,10 +540,10 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                             ? "-"
                                                             : journallist_h[
                                                                     number]
-                                                                .voucherNo
+                                                                .transNo
                                                                 .toString()
                                                                 .trim(),
-                                                      "Vouchers No",
+                                                      "Slip No",
                                                       () {},
                                                       false)),
                                               Expanded(
@@ -606,13 +586,13 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                               Filterjournallist_d = journallist_d
                                                                   .where((element) =>
                                                                       element
-                                                                          .voucherNo
+                                                                          .transNo
                                                                           .toString()
                                                                           .trim()
                                                                           .toLowerCase() ==
                                                                       journallist_h[
                                                                               number]
-                                                                          .voucherNo
+                                                                          .transNo
                                                                           .toString()
                                                                           .trim()
                                                                           .toLowerCase())
@@ -633,7 +613,7 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                                   .isEmpty
                                                               ? "-"
                                                               : journallist_h[number]
-                                                                          .particulars
+                                                                          .notes
                                                                           .toString()
                                                                           .trim() ==
                                                                       ""
@@ -643,10 +623,10 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                                       ? "-"
                                                                       : journallist_h[
                                                                               number]
-                                                                          .particulars
+                                                                          .notes
                                                                           .toString()
                                                                           .trim(),
-                                                        "Particulars",
+                                                        "Remarks",
                                                         () {},
                                                         true,
                                                       ),
@@ -665,13 +645,13 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                               Filterjournallist_d = journallist_d
                                                                   .where((element) =>
                                                                       element
-                                                                          .voucherNo
+                                                                          .transNo
                                                                           .toString()
                                                                           .trim()
                                                                           .toLowerCase() ==
                                                                       journallist_h[
                                                                               number]
-                                                                          .voucherNo
+                                                                          .transNo
                                                                           .toString()
                                                                           .trim()
                                                                           .toLowerCase())
@@ -694,10 +674,10 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                                 ? "-"
                                                                 : journallist_h[
                                                                         number]
-                                                                    .jvNature
+                                                                    .Whfromname
                                                                     .toString()
                                                                     .trim(),
-                                                          "Remarks",
+                                                          "LOC.FROM",
                                                           () {},
                                                           false),
                                                     ),
@@ -709,9 +689,9 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                                 ? "-"
                                                                 : journallist_h[
                                                                         number]
-                                                                    .convRate
+                                                                    .whToname
                                                                     .toString(),
-                                                          "\$",
+                                                          "LOC.TO",
                                                           () {},
                                                           false),
                                                     )
@@ -765,25 +745,7 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                               (previousValue,
                                                                       element) =>
                                                                   previousValue +
-                                                                  element
-                                                                      .debit!)
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 100,
-                                                    ),
-                                                    Text(
-                                                      Filterjournallist_d.fold(
-                                                              0,
-                                                              (previousValue,
-                                                                      element) =>
-                                                                  previousValue +
-                                                                  element
-                                                                      .credit!)
+                                                                  element.qty!)
                                                           .toString(),
                                                       style: TextStyle(
                                                           fontWeight:
@@ -850,8 +812,8 @@ class _JournalVouchersState extends State<JournalVouchers> {
                                                                       .toString())
                                                               : 00000) +
                                                           1;
-                                                      final res = await apicall(
-                                                          "INSERT INTO Vouchers_D (EntryNo, AcCode,VoucherNo,Particulars,Debit,Credit) VALUES ('${numsentry.toString().padLeft(5, "0")}', '${credittercontroller.text}','${journallist_h[number].voucherNo.toString().trim()}','${particularcontroller.text.toString().trim()}','${amountcontroller.text}','${debittercontroller.text}');");
+                                                      // final res = await apicall(
+                                                      //     "INSERT INTO Vouchers_D (EntryNo, AcCode,VoucherNo,Particulars,Debit,Credit) VALUES ('${numsentry.toString().padLeft(5, "0")}', '${credittercontroller.text}','${journallist_h[number].voucherNo.toString().trim()}','${particularcontroller.text.toString().trim()}','${amountcontroller.text}','${debittercontroller.text}');");
                                                       await getdata2();
                                                     },
                                                     child: Text(
@@ -890,31 +852,25 @@ class _JournalVouchersState extends State<JournalVouchers> {
       DataColumn(
           label: SizedBox(
         width: wid * .1,
-        child: const Text('AC CR',
+        child: const Text('Code',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       )),
       DataColumn(
           label: SizedBox(
         width: wid * .2,
-        child: const Text('AC Name',
+        child: const Text('Description',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       )),
       DataColumn(
           label: SizedBox(
-        width: wid * .1,
+        width: wid * .2,
         child: const Text('Particular',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       )),
       DataColumn(
           label: SizedBox(
         width: wid * .1,
-        child: const Text('Debit',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-      )),
-      DataColumn(
-          label: SizedBox(
-        width: wid * .1,
-        child: const Text('Credit',
+        child: const Text('Qty',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       )),
     ];
@@ -922,11 +878,10 @@ class _JournalVouchersState extends State<JournalVouchers> {
 
   List<DataRow> _createRows() {
     return Filterjournallist_d.map((e) => DataRow(cells: [
-          DataCell(Text(e.acCode.toString())),
-          DataCell(Text(e.AcName.toString())),
+          DataCell(Text(e.iCode.toString() == "" ? "---" : e.iCode.toString())),
+          DataCell(Text(e.iCode.toString() == "" ? "---" : e.iCode.toString())),
           DataCell(Text(e.particulars.toString())),
-          DataCell(Text(e.debit.toString())),
-          DataCell(Text(e.credit.toString())),
+          DataCell(Text(e.qty.toString())),
         ])).toList();
   }
 

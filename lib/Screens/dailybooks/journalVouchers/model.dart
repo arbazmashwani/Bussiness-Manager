@@ -46,6 +46,7 @@ class jouranl_voucher_h_model {
 class jouranl_voucher_d_model {
   String? entryNo;
   String? voucherNo;
+  String? AcName;
 
   String? acCode;
   String? particulars;
@@ -56,6 +57,7 @@ class jouranl_voucher_d_model {
       {this.entryNo,
       this.voucherNo,
       this.acCode,
+      this.AcName,
       this.particulars,
       this.debit,
       this.credit});
@@ -63,6 +65,7 @@ class jouranl_voucher_d_model {
   jouranl_voucher_d_model.fromJson(Map<String, dynamic> json) {
     entryNo = json['EntryNo'];
     voucherNo = json['VoucherNo'];
+    AcName = json['AcName'];
 
     acCode = json['AcCode'];
     particulars = json['Particulars'];
@@ -74,6 +77,7 @@ class jouranl_voucher_d_model {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['EntryNo'] = entryNo;
     data['VoucherNo'] = voucherNo;
+    data['AcName'] = AcName;
 
     data['AcCode'] = acCode;
     data['Particulars'] = particulars;

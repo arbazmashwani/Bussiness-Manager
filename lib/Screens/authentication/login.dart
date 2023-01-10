@@ -130,8 +130,9 @@ class _LoginState extends State<Login> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DrawerScreen()),
+                                      builder: (context) => DrawerScreen(
+                                            permissionList: dataresult,
+                                          )),
                                   (Route<dynamic> route) => false,
                                 );
                               }

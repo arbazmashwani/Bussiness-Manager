@@ -1,7 +1,9 @@
 // ignore: file_names
+import 'package:bm/Screens/authentication/admin_model.dart';
 import 'package:bm/Screens/dailybooks/journalVouchers/main.dart';
 import 'package:bm/Screens/dailybooks/payments/payments_main.dart';
 import 'package:bm/Screens/dailybooks/receipts/mainpage.dart';
+import 'package:bm/Screens/dailybooks/transfers/main.dart';
 import 'package:bm/Screens/special_books/account_manager/account_manager_main.dart';
 import 'package:bm/Screens/special_books/assets_ledger/assets_ledger.dart';
 
@@ -17,7 +19,8 @@ import 'package:bm/responsive.dart';
 import 'package:flutter/material.dart';
 
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({super.key});
+  final List<AdminModel> permissionList;
+  const DrawerScreen({super.key, required this.permissionList});
 
   @override
   State<DrawerScreen> createState() => _DrawerScreenState();
@@ -26,7 +29,7 @@ class DrawerScreen extends StatefulWidget {
 class _DrawerScreenState extends State<DrawerScreen> {
   List<bool> _selected = List.generate(4, (i) => false);
   // ignore: non_constant_identifier_names
-  List<bool> _Subselected = List.generate(9, (i) => false);
+  List<bool> _Subselected = List.generate(10, (i) => false);
   List draweroptions = [
     "Daily Books",
     "Special Books",
@@ -36,6 +39,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   List<String> dailybooklist = [
     "Purchase Invoice",
     "Sale Invoice",
+    "Transfers",
     "Receipt",
     "Payments",
     "Journal Vouchers"
@@ -104,7 +108,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    namewidget("ADMIN 123"),
+                                    namewidget(
+                                        "ADMIN 123 ${widget.permissionList.length}"),
                                   ],
                                 ),
                                 Padding(
@@ -182,6 +187,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                                 _selected = List.filled(
                                                     _selected.length, false,
                                                     growable: true);
+
+                                                _Subselected[0] = true;
+                                                print(_Subselected[0]);
 
                                                 _selected[i] = !_selected[i];
                                               }), // Reverse bool value
@@ -388,29 +396,29 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Row(
-                        children: const [
-                          Icon(
+                        children: [
+                          const Icon(
                             Icons.notifications,
                             color: Colors.black,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
                           Text(
-                            "Welcome: ADMIN",
-                            style: TextStyle(
+                            "Welcome:  ${widget.permissionList.first.userName}",
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
-                          CircleAvatar(
+                          const CircleAvatar(
                             radius: 30,
                             backgroundImage: NetworkImage(
                                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSPWhDcrmhvY86Q42jr73c-812hSyMhO3DxTXRt2H6uxgiLKsnktZsZfJ-14AvPaqR01k&usqp=CAU"),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 30,
                           ),
                         ],
@@ -561,6 +569,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                                             _selected.length,
                                                             false,
                                                             growable: true);
+
+                                                        _Subselected.first =
+                                                            true;
 
                                                         _selected[i] =
                                                             !_selected[i];
@@ -713,10 +724,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
           color: Colors.green,
         );
       } else if (_Subselected[2] == true) {
-        return const ReceiptPageMain();
+        if (widget.permissionList.first.tBookV == false) {
+          return containerwidget("youre restricted from this page");
+        } else {
+          return const TransferMainpage();
+        }
       } else if (_Subselected[3] == true) {
-        return const PaymentsPageMain();
+        return const ReceiptPageMain();
       } else if (_Subselected[4] == true) {
+        return const PaymentsPageMain();
+      } else if (_Subselected[5] == true) {
         return const JournalVouchers();
       }
     }
